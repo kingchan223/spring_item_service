@@ -1,5 +1,6 @@
 package hello.itemservice.domain.item;
 
+import hello.itemservice.domain.ItemRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -8,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.*;
 
 public class ItemRepositoryTest {
-    ItemRepository itemRepository = new ItemRepository();
+    ItemRepository itemRepository = new ItemMemoryRepository();
 
 //    public Item save(Item item){
 //        Set<Long> longs = store.keySet();
@@ -96,7 +97,6 @@ public class ItemRepositoryTest {
 
         //then
         assertThat(itemRepository.findById(itemA.getId()).getItemName()).isEqualTo("건두부");
-        assertThat(itemRepository.findById(itemA.getId())).isSameAs(itemParam);
 
     }
 
@@ -111,9 +111,24 @@ public class ItemRepositoryTest {
 
         //when
         itemRepository.clear();
+        //then
+        assertThat(itemRepository.findAll().size()).isEqualTo(0);
+    }
+
+    @Test
+    @DisplayName("아이템 하나 삭제하기")
+    void deleteOne(){
+        //given
+        Item itemA = new Item("두부", 1000, 100);
+
+        //when
+        itemRepository.save(itemA);
+        Item savedItem = itemRepository.findById(itemA.getId());
+        itemRepository.delete(savedItem.getId());
 
         //then
         assertThat(itemRepository.findAll().size()).isEqualTo(0);
+
     }
 
 }

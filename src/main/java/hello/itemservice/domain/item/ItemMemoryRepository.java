@@ -1,14 +1,14 @@
 package hello.itemservice.domain.item;
 
 
-import org.apache.catalina.Store;
+import hello.itemservice.domain.ItemRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;
 
 @Repository
-public class ItemRepository {
-    private static final Map<Long, Item> store = new HashMap<>();//실제 만들 때는 hashmap 쓰면 안된다. concurrenthashmapTMrl
+public class ItemMemoryRepository implements ItemRepository {
+    private static final Map<Long, Item> store = new HashMap<>();//실제 만들 때는 hashmap 쓰면 안된다. concurrenthashmap쓰기
     private static long sequence = 0;//얘도 원래는 automic long을 사용한다.ㄴ
 
     public Item save(Item item){
@@ -36,5 +36,10 @@ public class ItemRepository {
 
     public void clear(){
         store.clear();
+    }
+
+    public void delete(long itemId){
+        Item item = findById(itemId);
+        store.remove(itemId);
     }
 }
